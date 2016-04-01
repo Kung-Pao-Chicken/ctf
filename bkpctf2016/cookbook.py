@@ -1,3 +1,4 @@
+#Author:unamer
 from pwn import *
 p=process('./cookbook')
 p.recvuntil('?')
