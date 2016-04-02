@@ -14,11 +14,11 @@ https://cryptsec.wordpress.com/2016/03/21/bctf-2016-write-up-special-rsa-crypto-
 4.满足乘法律：a * b % N = (a % N * b % N) % N  
 5.满足除法律：a * b_inv % N = (a % N / b % N) % N  
 6. 指数等于连乘，因此满足指数律  
- * (a * b) ^ r % N = (a ^ r % N) * (b ^ r % N) % N  
- * (a - b) ^ r % N = (a ^ r % N) / (b ^ r % N) % N  
- * g ^ (a + b) % N = (g ^ a % N) * (g ^ b % N) % N  
+* (a * b) ^ r % N = (a ^ r % N) * (b ^ r % N) % N  
+* (a - b) ^ r % N = (a ^ r % N) / (b ^ r % N) % N  
+* g ^ (a + b) % N = (g ^ a % N) * (g ^ b % N) % N  
 7.任何数乘上模反元素，余数会是1  
- * a * a_inv % N = 1
+* a * a_inv % N = 1
 
 
   
