@@ -19,7 +19,3 @@ https://cryptsec.wordpress.com/2016/03/21/bctf-2016-write-up-special-rsa-crypto-
 *g ^ (a + b) % N = (g ^ a % N) * (g ^ b % N) % N  
 7.任何数乘上模反元素，余数会是1  
 *a * a_inv % N = 1
-
-
-  
-  
