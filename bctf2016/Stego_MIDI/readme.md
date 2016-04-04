@@ -10,3 +10,71 @@
 ##3.看懂MIDI
 >	MIDI可以被解析成各种格式：XML、CSV等。我们用MIDICSV将MIDI解析成CSV格式的文件（百度就好）。第一列是音轨，第二列就是音符时长了。观察文件，一系列行的音符时长不正常。因此，提取即可。（代码还没弄好，正在学Python中）  
 
+##4.MIDI => CSV
+> midi转换成csv之后是这个样子的  
+```
+1,48, Note_off_c,0,72,64,
+1,48, Note_off_c,1,77,64,
+1,60, Note_on_c,2,63,80,
+1,60, Note_off_c,2,65,64,
+1,60, Note_on_c,1,75,80,
+1,61, Note_on_c,0,70,80,
+1,108, Note_off_c,0,70,64,
+1,108, Note_off_c,1,75,64,
+1,120, Note_on_c,0,67,80,
+1,120, Note_on_c,1,72,80,
+1,120, Note_off_c,2,63,64,
+1,120, Note_on_c,2,60,80,
+1,168, Note_off_c,0,67,64,
+1,168, Note_off_c,1,72,64,
+1,180, Note_on_c,0,65,80,
+1,180, Note_on_c,1,70,80,
+1,180, Note_off_c,2,60,64,
+1,180, Note_on_c,2,58,80,
+1,228, Note_off_c,0,65,64,
+1,228, Note_off_c,1,70,64,
+1,240, Note_on_c,0,67,80,
+1,240, Note_on_c,1,72,80,
+1,240, Note_off_c,2,58,64,
+1,240, Note_on_c,2,60,80,
+1,288, Note_off_c,0,67,64,
+1,288, Note_off_c,1,72,64,
+1,300, Note_on_c,0,65,80,
+1,300, Note_on_c,1,70,80,
+1,300, Note_off_c,2,60,64,
+1,300, Note_on_c,2,58,80,
+1,348, Note_off_c,0,65,64,
+......
+```
+可以看到第二列有一些奇怪的数字，比如61 481 ....
+首先替换掉最后一个不是80的行，因为只有80才是有用的，我们发现除了80就是64  
+使用以下正则表达式替换，替换完删除头尾一些无用的数据
+```regex
+^.+64,$\r\n
+```
+然后使用cmd命令提取第二列。
+```cmd
+for /f "tokens=2 delims=," %a in (midifan.csv) do echo %a>>column2.txt
+```
+最后使用一下vbs去除重复行，只需要把txt拖到vbs上就行了 
+```vbs
+on error resume next
+Const adOpenStatic = 3 
+Const adLockOptimistic = 3 
+Const adCmdText = &H0001 
+set args = wscript.arguments
+Set objConnection = CreateObject("ADODB.Connection") 
+set f=createobject("scripting.filesystemobject")
+Set objRecordSet = CreateObject("ADODB.Recordset") 
+strPathToTextFile =f.GetParentFolderName(args(0))
+strFile = f.GetFileName(args(0)) 
+objConnection.Open "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & strPathtoTextFile & ";Extended Properties=""text;HDR=NO;FMT=Delimited""" 
+objRecordSet.Open "Select DISTINCT * FROM " & strFile,objConnection, adOpenStatic, adLockOptimistic, adCmdText 
+set of=f.opentextfile(mid(args(0),1,instrrev(args(0),".")-1)&"_.txt",8,true)
+Do Until objRecordSet.EOF 
+    of.WriteLine objRecordSet.Fields.Item(0).Value    
+    objRecordSet.MoveNext 
+Loop 
+Set of=Nothing
+MsgBox "OK!"
+```
