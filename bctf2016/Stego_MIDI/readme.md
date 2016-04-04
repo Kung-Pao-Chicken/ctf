@@ -48,33 +48,13 @@
 ```
 可以看到第二列有一些奇怪的数字，比如61 481 ....
 首先替换掉最后一个不是80的行，因为只有80才是有用的，我们发现除了80就是64  
-使用以下正则表达式替换，替换完删除头尾一些无用的数据
+保留一份源csv
+使用以下正则表达式替换，替换完删除头尾一些无用的数据，然后用第二个正则替换，现在就留下一些有用的数据了。
 ```regex
 ^.+64,$\r\n
+^.+Note_on_c,(0|2|9).+$\r\n
 ```
 然后使用cmd命令提取第二列。
 ```cmd
 for /f "tokens=2 delims=," %a in (midifan.csv) do echo %a>>column2.txt
-```
-最后使用一下vbs去除重复行，只需要把txt拖到vbs上就行了 
-```vbs
-on error resume next
-Const adOpenStatic = 3 
-Const adLockOptimistic = 3 
-Const adCmdText = &H0001 
-set args = wscript.arguments
-Set objConnection = CreateObject("ADODB.Connection") 
-set f=createobject("scripting.filesystemobject")
-Set objRecordSet = CreateObject("ADODB.Recordset") 
-strPathToTextFile =f.GetParentFolderName(args(0))
-strFile = f.GetFileName(args(0)) 
-objConnection.Open "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & strPathtoTextFile & ";Extended Properties=""text;HDR=NO;FMT=Delimited""" 
-objRecordSet.Open "Select DISTINCT * FROM " & strFile,objConnection, adOpenStatic, adLockOptimistic, adCmdText 
-set of=f.opentextfile(mid(args(0),1,instrrev(args(0),".")-1)&"_.txt",8,true)
-Do Until objRecordSet.EOF 
-    of.WriteLine objRecordSet.Fields.Item(0).Value    
-    objRecordSet.MoveNext 
-Loop 
-Set of=Nothing
-MsgBox "OK!"
 ```
