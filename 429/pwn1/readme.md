@@ -2,14 +2,14 @@
 开了NX选项，栈上啥也执行不了。。需要去找system
 
 刚开始有点迷惘，system参数是指向字符串的地址，而非字符串本身
-栈上数据可写，但栈上的地址根本不固定，咋办咯？
+栈上数据可写，但栈上的地址根本不固定，咋办咯？  
 曾宇圣说这不有个scanf吗。。然后就懂了
 
-要先跳到scanf去把/bin/sh放到地址固定的任意地方，比如数据段
-再跳到system，而scanf多少字节才溢出呢？
-pattern.py测试出来是140
-
-进scanf之后可以用finish来迅速地跳到return（这是一个可以快速结束函数的好办法~~~
+要先跳到scanf去把/bin/sh放到地址固定的任意地方，比如数据段  
+再跳到system，而scanf多少字节才溢出呢？  
+pattern.py测试出来是140  
+  
+进scanf之后可以用finish来迅速地跳到return（这是一个可以快速结束函数的好办法~~~  
 
 ```python
 from pwn import *  
