@@ -88,7 +88,7 @@ This time we will overwrite the vtable like this:
 
 This will call system('1\x80;/bin/sh;') after next puts called!
 
-Why '1\x80;' does here?
+What '1\x80;' does here?
 
 Let's see the implemention of puts.
 
