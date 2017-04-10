@@ -22,5 +22,4 @@ for i in range(38):
 for onebyte in answerarray:
 	print origin[afterarray.index(onebyte)],
 ```
-
 flag:ASIS{d2d2791c6a18da9ed19ade28cb09ae05}
