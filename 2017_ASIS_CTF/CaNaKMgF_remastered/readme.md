@@ -79,9 +79,10 @@ Why not just control rip to **function gets**?
 Now we can modify the whole content of stdout!
 
 -- How to spawn a shell?
+
 -- system("/bin/sh") !
 
-This time we will overwrite the vtable looks like this:
+This time we will overwrite the vtable like this:
 
 ![alt](https://raw.githubusercontent.com/Kung-Pao-Chicken/ctf/master/2017_ASIS_CTF/CaNaKMgF_remastered/4.jpg)
 
