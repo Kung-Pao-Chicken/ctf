@@ -1,0 +1,2 @@
+Tcpdump文件，直接Wireshark。发现全都是TCP，只有2个HTTP，还全都是刚才TCP的包。分别提取后发现有MPEG数据流存在。
+所以尝试Follow TCP Stream，然后发现GNOME直接可以看。不过回放有些问题，就慢慢找好了。大约14s处就有flag。
