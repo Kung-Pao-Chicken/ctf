@@ -1,10 +1,10 @@
-  In this challenge, we are given an ELF-64 file. After making an attempt to run it, we know that correct flag should be given as argv[1].
+&nbsp;&nbsp;In this challenge, we are given an ELF-64 file. After making an attempt to run it, we know that correct flag should be given as argv[1].
 
-  Then drag it into IDA. Result of static analysis was a real mess because the program was written in C++. However, the position of final comparison was clear, that was on 0x4010a0.
+&nbsp;&nbsp;Then drag it into IDA. Result of static analysis was a real mess because the program was written in C++. However, the position of final comparison was clear, that was on 0x4010a0.
 
 ![Alt ida01](./images/ida01.png?raw=true)
 
-  Our input string, after certain transformation, should become that shown in picture ("82a38...") to produce a correct result. Not knowing what kind of transformation it is, I set breakpoint on 0x4010a0, to see whether input chars and transformed chars have one-to-one correspondence. Luckily they have.
+&nbsp;&nbsp;Our input string, after certain transformation, should become that shown in picture ("82a38...") to produce a correct result. Not knowing what kind of transformation it is, I set breakpoint on 0x4010a0, to see whether input chars and transformed chars have one-to-one correspondence. Luckily they have.
 So I wrote a script with a table that reflect the correspondence relationship. After running it we quickly got the flag.
 
 ```
