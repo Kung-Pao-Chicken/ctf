@@ -11,4 +11,16 @@
 
 &nbsp;&nbsp;So easy. Again I wrote a simple script to decrypt flag.enc, and got a picture which contains the flag.
 
+```
+fp=open('flag.enc','rb')
+flag=fp.read()
+decoded=""
+for i in range(len(flag)):
+	for b in xrange(256):
+		if ((b & 15) << 4 | (b & 240) >> 4)==ord(flag[i]):
+			decoded+=chr(b)
+fp2=open('decoded','wb')
+fp2.write(decoded)
+```
+
 ![Alt decoded](./images/decoded.png?raw=true)
