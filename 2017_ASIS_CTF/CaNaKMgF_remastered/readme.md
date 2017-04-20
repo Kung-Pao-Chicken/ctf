@@ -1,6 +1,6 @@
 # Writeup
 
-## 1. Binary Analysize
+## 1. Binary Analysis
 
 First thing first,**checksec**.
 
@@ -52,7 +52,7 @@ General process splits in some steps.
 > 9. now the arbitrary pointer should be in fastbin freelist!
 > 10. another malloc will return the arbitrary porint we just write in step 6!
 
-But this trick returns nearly-arbitrary pointer ,because there shuould be a corresponding size stores in next QWORD of the pointer you want.
+But this trick returns nearly-arbitrary pointer ,because there should be a corresponding size stores in next QWORD of the pointer you want.
 
 Last time I chose the memory right before the malloc_hook, this time I chose a memory inside stdout in libc.
 
@@ -66,11 +66,11 @@ Now we can trick malloc to reurn a pointer inside the stdout,cool!
 
 Next we can modify the pointer of vtable, btw the libc version is 2.23 and it doesn't contain a vtable check!
 
-While the puts in print_menu function is called, we will control the rip by modifing vtable in stdout,but this is a one-shoot jump.
+While the puts in print_menu function is called, we will control the rip by modifying vtable in stdout,but this is a one-shoot jump.
 
 First I consider the magic gadgets in libc,but sadly none of this gadgets works.
 
-I sudently noticed that while we control the rip,the rdi points to stdout pointer!
+I suddenly noticed that while we control the rip,the rdi points to stdout pointer!
 
 Why not just control rip to **function gets**?
 
@@ -90,7 +90,7 @@ This will call system('1\x80;/bin/sh;') after next puts called!
 
 What '1\x80;' does here?
 
-Let's see the implemention of puts.
+Let's see the implementation of puts.
 
 ![alt](https://raw.githubusercontent.com/Kung-Pao-Chicken/ctf/master/2017_ASIS_CTF/CaNaKMgF_remastered/5.jpg)
 
